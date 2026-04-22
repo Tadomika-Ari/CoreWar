@@ -15,10 +15,6 @@ Optional body with more details.
 - [+] New feature or file added
 - [-] File or feature removed
 - [~] Modification or update
-- [!] Bug fix
-- [*] Refactor or cleanup
-- [?] Tests
-- [#] Configuration or build
 
 ## Examples
 [+] Add user authentication module

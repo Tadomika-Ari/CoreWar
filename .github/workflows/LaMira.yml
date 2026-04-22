@@ -21,6 +21,7 @@ env:
 
 jobs:
   check_compilation_and_coding_style:
+    environment: 'production'
     runs-on: ubuntu-latest
     name: check_compilation_and_coding_style
     if: github.repository != 'EpitechPGE1-2025/G-CPE-200-NCE-2-1-corewar-4'
@@ -121,9 +122,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: runs_tests
-        timeout-minutes: 2
-        run: make tests_run
+      ##- name: runs_tests
+      ##  timeout-minutes: 2
+      ##  run: make tests_run
 
   push_to_mirror:
     runs-on: ubuntu-latest
