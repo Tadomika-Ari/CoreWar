@@ -1,0 +1,7 @@
+*.s
+*.cor
+*.a
+*.o
+robot-factory
+G-CPE*
+*.log
