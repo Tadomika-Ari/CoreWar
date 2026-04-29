@@ -7,6 +7,7 @@
 
 #include "my.h"
 #include "op.h"
+#include <stdint.h>
 
 #ifndef ROBOTFACTORIE_H_
     #define ROBOTFACTORIE_H_
@@ -27,5 +28,6 @@ header_t *get_header(char ***tab);
 
 int print_into(char ***tab, char **av, header_t *header);
 int get_prog_size(char ***tab);
+uint8_t *create_arena(void);
 
 #endif /* !ROBOTFACTORIE_H_ */
