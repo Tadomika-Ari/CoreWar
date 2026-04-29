@@ -26,6 +26,10 @@ typedef struct int_header {
     int in_quotes;
 }int_head_t;
 
+typedef struct coreware_s {
+    int nb_champion;
+    int nb_cyrcle_to_die;
+} coreware_t;
 
 int help(void);
 char ***open_file(const char *namefile);
