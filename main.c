@@ -25,13 +25,7 @@ int init_core(coreware_t *core, int ac, char **av)
 
 int main(int ac, char **av)
 {
-    coreware_t *core = malloc(sizeof(coreware_t));
-    ll_t *list_champ = NULL
-    champ_t *tmp = NULL;
-
-    init_champ()
-    init_core(core, ac, av);
-    my_printf("%s\n", core->nb_champion);
-    free(core);
+    if (ac == 2 && my_strcmp(av[1], "-h") == 0)
+        return help();
     return OK;
 }
