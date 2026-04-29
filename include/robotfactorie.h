@@ -14,6 +14,13 @@
     #define NAME 1
     #define COM 2
 
+typedef struct champ {
+    char *file_champ;
+    int size; 
+    char *name_champ;
+    int position;
+} champ_t;
+
 typedef struct int_header {
     int index;
     int in_quotes;
