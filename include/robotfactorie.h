@@ -16,8 +16,8 @@
 
 typedef struct champ {
     char *file_champ;
-    int size; 
-    char *name_champ;
+    int size;
+    int name_champ;
     int position;
 } champ_t;
 
