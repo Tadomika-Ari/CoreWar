@@ -22,7 +22,7 @@ champ_t *init_champ(char **av, int *i)
     champ_t *tmp = malloc(sizeof(champ_t));
 
     if (av[*i] == NULL || av[*i][0] != '-' || av[*i][1] != 'n') {
-        printf("No nb");
+        my_printf("No nb\n");
         free(tmp);
         return NULL;
     }
@@ -30,12 +30,13 @@ champ_t *init_champ(char **av, int *i)
     *i = *i + 2;
     check_pos(tmp, i, av);
     if (av[*i] == NULL || av[*i][0] == '-') {
-        printf("no file");
+        my_printf("no file\n");
         free(tmp);
         return NULL;
     }
     tmp->file_champ = av[*i];
     *i = *i + 1;
+    tmp->is_active = 1;
     return tmp;
 }
 
@@ -47,8 +48,8 @@ void see_struct(ll_t *list_champ)
     while (list_champ != NULL) {
         next = list_champ->next;
         tmp = list_champ->data;
-        printf("NAME : %s\n", tmp->file_champ);
-        printf("ID : %d\n", tmp->name_champ);
+        my_printf("NAME : %s\n", tmp->file_champ);
+        my_printf("ID : %d\n", tmp->name_champ);
         free(tmp);
         free(list_champ);
         list_champ = next;
