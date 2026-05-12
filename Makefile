@@ -12,6 +12,7 @@ NAME    =      corewar
 MAINTEST        = 	main.c \
 				SRC/op.c \
 				SRC/my_strncat.c \
+				SRC/arena.c
 				SRC/flag_help.c\
 				SRC/create_champion.c\
 

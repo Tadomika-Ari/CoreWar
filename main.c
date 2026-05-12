@@ -6,6 +6,7 @@
 */
 
 #include "include/robotfactorie.h"
+#include <stdint.h>
 
 void check_pos(champ_t *tmp, int *i, char **av)
 {
@@ -35,6 +36,7 @@ void see_struct(ll_t *list_champ)
 
 int main(int ac, char **av)
 {
+    uint8_t *arena = create_arena();
     coreware_t *core = malloc(sizeof(coreware_t));
     ll_t *list_champ = NULL;
     champ_t *tmp = NULL;
@@ -49,6 +51,7 @@ int main(int ac, char **av)
         push_to_front(&list_champ, tmp);
     }
     see_struct(list_champ);
+    free(arena);
     free(core);
     return OK;
 }
