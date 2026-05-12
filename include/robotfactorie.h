@@ -19,6 +19,7 @@ typedef struct champ {
     int size;
     int name_champ;
     int position;
+    int is_active;
 } champ_t;
 
 typedef struct int_header {
