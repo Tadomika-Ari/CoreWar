@@ -39,5 +39,7 @@ header_t *get_header(char ***tab);
 
 int print_into(char ***tab, char **av, header_t *header);
 int get_prog_size(char ***tab);
+champ_t *init_champ(char **av, int *i);
+void check_pos(champ_t *tmp, int *i, char **av);
 
 #endif /* !ROBOTFACTORIE_H_ */
