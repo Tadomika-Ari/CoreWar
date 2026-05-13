@@ -43,5 +43,8 @@ int get_prog_size(char ***tab);
 uint8_t *create_arena(void);
 champ_t *init_champ(char **av, int *i);
 void check_pos(champ_t *tmp, int *i, char **av);
+int loop(coreware_t *core, ll_t *list_champ);
+int set_champ_dead(ll_t *list_champ, coreware_t *core, int champ_target);
+void see_struct(ll_t *list_champ);
 
 #endif /* !ROBOTFACTORIE_H_ */
