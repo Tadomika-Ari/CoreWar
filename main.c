@@ -28,10 +28,15 @@ void see_struct(ll_t *list_champ)
         tmp = list_champ->data;
         my_printf("NAME : %s\n", tmp->file_champ);
         my_printf("ID : %d\n", tmp->name_champ);
-        free(tmp);
-        free(list_champ);
         list_champ = next;
     }
+}
+
+int init_struct(coreware_t *core)
+{
+    core->nb_champion = 0;
+    core->nb_cyrcle_to_die = CYCLE_TO_DIE;
+    return 0;
 }
 
 int main(int ac, char **av)
@@ -43,14 +48,16 @@ int main(int ac, char **av)
 
     if (ac == 2 && my_strcmp(av[1], "-h") == 0)
         return help();
+    init_struct(core);
     for (int i = 1; av[i] != NULL;) {
         tmp = init_champ(av, &i);
         if (tmp == NULL) {
             return 84;
         }
-        push_to_front(&list_champ, tmp);
+        push_to_back(&list_champ, tmp);
+        core->nb_champion++;
     }
-    see_struct(list_champ);
+    loop(core, list_champ);
     free(arena);
     free(core);
     return OK;
