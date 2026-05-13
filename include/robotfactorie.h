@@ -46,5 +46,6 @@ void check_pos(champ_t *tmp, int *i, char **av);
 int loop(coreware_t *core, ll_t *list_champ);
 int set_champ_dead(ll_t *list_champ, coreware_t *core, int champ_target);
 void see_struct(ll_t *list_champ);
+int check_is_dead(int life, ll_t *list_champ, coreware_t *core);
 
 #endif /* !ROBOTFACTORIE_H_ */
