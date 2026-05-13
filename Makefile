@@ -17,6 +17,7 @@ MAINTEST        = 	main.c \
 				SRC/create_champion.c\
 				SRC/loop.c\
 				SRC/set_champ_dead.c\
+				SRC/check_is_dead.c\
 
 libflags        =        -L./lib/my/word_array -larray -L./lib/my/open_read -lopendread -L./lib/my/malloc -lmalloc -L./lib/my/linked_list -llinked -L./lib/my/my_printf -lprintf -L./lib/my -lmy -I.
 
