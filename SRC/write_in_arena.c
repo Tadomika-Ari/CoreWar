@@ -9,6 +9,8 @@
 
 static char *get_next_champ_path(char **av, int *index)
 {
+    char *champ_path = NULL;
+
     while (av[*index] != NULL) {
         if (my_strcmp(av[*index], "-n") == 0 ||
             my_strcmp(av[*index], "-a") == 0 ||
@@ -20,8 +22,9 @@ static char *get_next_champ_path(char **av, int *index)
             *index += 1;
             continue;
         }
-        (*index)++;
-        return av[*index];
+        champ_path = av[*index];
+        *index += 1;
+        return champ_path;
     }
     return NULL;
 }
