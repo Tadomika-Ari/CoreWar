@@ -62,12 +62,11 @@ int loop(coreware_t *core, ll_t *list_champ)
     int life = 0;
     int delta = CYCLE_DELTA;
     int cycle_to_die = core->nb_cyrcle_to_die;
-    int cylce = 0;
 
     see_struct(list_champ);
     set_champ_dead(list_champ, core, 1);
     while (cycle_to_die >= 0 && check_is_dead(life, list_champ, core) == 0) {
-        for (cylce = 1; cylce < cycle_to_die; cylce++) {
+        for (int cylce = 1; cylce < cycle_to_die; cylce++) {
         }
         check_is_alive(core, list_champ);
         cycle_to_die -= delta;
