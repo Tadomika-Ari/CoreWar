@@ -39,13 +39,18 @@ int check_win(coreware_t *core, ll_t *list_champ)
 int loop(coreware_t *core, ll_t *list_champ)
 {
     int life = 0;
+    int delta = CYCLE_DELTA;
+    int cycle_to_die = core->nb_cyrcle_to_die;
 
     see_struct(list_champ);
-    for (int i = core->nb_cyrcle_to_die; i >= 0; i--) {
+    set_champ_dead(list_champ, core, 0);
+    for (int cycle = 1; cycle_to_die >= 0; cycle++) {
         if (check_is_dead(life, list_champ, core) == 1) {
-            printf("%d", i);
+            printf("%d", cycle);
             return 0;
         }
+        set_champ_dead(list_champ, core, 1);
+        cycle_to_die = cycle_to_die - delta;
     }
     check_win(core, list_champ);
     return 0;
