@@ -39,6 +39,13 @@ int init_struct(coreware_t *core)
     return 0;
 }
 
+int free_all(coreware_t *core, uint8_t *arena)
+{
+    free(arena);
+    free(core);
+    return 0;
+}
+
 int main(int ac, char **av)
 {
     uint8_t *arena = create_arena();
@@ -57,8 +64,8 @@ int main(int ac, char **av)
         push_to_back(&list_champ, tmp);
         core->nb_champion++;
     }
+    if (write_in_arena(arena, core->nb_champion, av) == 84)
+        return 84;
     loop(core, list_champ);
-    free(arena);
-    free(core);
-    return OK;
+    return free_all(core, arena);
 }
