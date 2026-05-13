@@ -9,6 +9,8 @@
 
 int delibiration(int alive, champ_t *winner)
 {
+    if (alive > 1)
+        return 0;
     if (alive == 1) {
         my_printf("The player %d(%s) has won.\n",
             winner->name_champ, winner->file_champ);
@@ -18,7 +20,6 @@ int delibiration(int alive, champ_t *winner)
         my_printf("No champion alive.\n");
         return 1;
     }
-    my_printf("No winner.\n");
     return 1;
 }
 
@@ -48,12 +49,18 @@ int loop(coreware_t *core, ll_t *list_champ)
     int life = 0;
     int delta = CYCLE_DELTA;
     int cycle_to_die = core->nb_cyrcle_to_die;
+    int cylce = 0;
 
     see_struct(list_champ);
     set_champ_dead(list_champ, core, 0);
-    for (int cycle = 1; cycle_to_die >= 0; cycle++) {
-        cycle_to_die = cycle_to_die - delta;
+    while (cycle_to_die >= 0 && check_is_dead(life, list_champ, core) == 0) {
+        for (cylce = 1; cylce < cycle_to_die; cylce++) {
+        }
+        cycle_to_die -= delta;
     }
-    check_win(core, list_champ);
+    if (cycle_to_die < 0) {
+        if (check_is_dead(life, list_champ, core) == 0)
+            my_printf("No winner.\n");
+    }
     return 0;
 }
