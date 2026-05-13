@@ -46,12 +46,15 @@ int check_is_alive(coreware_t *core, ll_t *list_champ)
     for (ll_t *tmp = list_champ; tmp; tmp = tmp->next) {
         champ = tmp->data;
         if (champ->is_active == 1) {
-            my_printf("Champion %d(%s) is alive\n", champ->name_champ, champ->file_champ);
+            my_printf("Champion %d(%s) is alive\n", champ->name_champ,
+                champ->file_champ);
         }
         if (champ->is_active == 0) {
-            my_printf("Champion %d(%s) is dead\n", champ->name_champ, champ->file_champ);
+            my_printf("Champion %d(%s) is dead\n", champ->name_champ,
+                champ->file_champ);
         }
     }
+    return 0;
 }
 
 int loop(coreware_t *core, ll_t *list_champ)
@@ -62,6 +65,7 @@ int loop(coreware_t *core, ll_t *list_champ)
     int cylce = 0;
 
     see_struct(list_champ);
+    set_champ_dead(list_champ, core, 1);
     while (cycle_to_die >= 0 && check_is_dead(life, list_champ, core) == 0) {
         for (cylce = 1; cylce < cycle_to_die; cylce++) {
         }
