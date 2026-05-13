@@ -31,6 +31,7 @@ typedef struct int_header {
 typedef struct coreware_s {
     int nb_champion;
     int nb_cyrcle_to_die;
+    int is_dump;
 } coreware_t;
 
 int help(void);
