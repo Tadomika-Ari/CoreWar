@@ -9,6 +9,8 @@
 
 int delibiration(int alive, champ_t *winner)
 {
+    int no_champ_printed = 0;
+
     if (alive > 1)
         return 0;
     if (alive == 1) {
@@ -17,7 +19,10 @@ int delibiration(int alive, champ_t *winner)
         return 1;
     }
     if (alive == 0) {
-        my_printf("No champion alive.\n");
+        if (no_champ_printed == 0) {
+            my_printf("No champion alive.\n");
+            no_champ_printed = 1;
+        }
         return 1;
     }
     return 1;
@@ -31,7 +36,7 @@ int check_is_dead(int life, ll_t *list_champ, coreware_t *core)
 
     for (ll_t *tmp = list_champ; tmp; tmp = tmp->next) {
         champ = tmp->data;
-        if (champ->is_active == 1) {
+        if (champ->is_alive == 1) {
             alive++;
             winner = champ;
         }

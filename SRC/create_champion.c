@@ -7,6 +7,12 @@
 
 #include "../include/robotfactorie.h"
 
+void init_last(champ_t *tmp)
+{
+    tmp->is_alive = 1;
+    tmp->coldown = 0;
+}
+
 champ_t *init_champ(char **av, int *i)
 {
     champ_t *tmp = malloc(sizeof(champ_t));
@@ -26,6 +32,6 @@ champ_t *init_champ(char **av, int *i)
     }
     tmp->file_champ = av[*i];
     *i = *i + 1;
-    tmp->is_active = 1;
+    init_last(tmp);
     return tmp;
 }
