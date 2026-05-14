@@ -17,9 +17,12 @@ MAINTEST        = 	main.c \
 				SRC/flag_help.c\
 				SRC/create_champion.c\
 				SRC/write_in_arena.c\
+				SRC/print_arena.c\
 				SRC/loop.c\
 				SRC/set_champ_dead.c\
 				SRC/check_is_dead.c\
+				SRC/instruction.c\
+				SRC/scan_map.c\
 
 libflags        =        -L./lib/my/word_array -larray -L./lib/my/open_read -lopendread -L./lib/my/malloc -lmalloc -L./lib/my/linked_list -llinked -L./lib/my/my_printf -lprintf -L./lib/my -lmy -I.
 
@@ -69,7 +72,6 @@ clean:
 	$(RM) $(OBJ)
 	$(RM) $(TEST_BIN)
 	$(RM) *.gcda *.gcno
-	$(RM) *.cor
 
 fclean: clean
 	make fclean -C ./lib/my/
