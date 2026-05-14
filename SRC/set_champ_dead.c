@@ -24,6 +24,6 @@ int set_champ_dead(ll_t *list_champ, coreware_t *core, int champ_target)
     if (tmp == NULL)
         return 84;
     champ = tmp->data;
-    champ->is_active = 0;
+    champ->is_alive = 0;
     return 0;
 }
