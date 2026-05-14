@@ -13,11 +13,11 @@ int check_is_alive(coreware_t *core, ll_t *list_champ)
 
     for (ll_t *tmp = list_champ; tmp; tmp = tmp->next) {
         champ = tmp->data;
-        if (champ->is_active == 1) {
+        if (champ->is_alive == 1) {
             my_printf("Champion %d(%s) is alive\n", champ->name_champ,
                 champ->file_champ);
         }
-        if (champ->is_active == 0) {
+        if (champ->is_alive == 0) {
             my_printf("Champion %d(%s) is dead\n", champ->name_champ,
                 champ->file_champ);
         }
@@ -25,23 +25,34 @@ int check_is_alive(coreware_t *core, ll_t *list_champ)
     return 0;
 }
 
-int loop(coreware_t *core, ll_t *list_champ)
+int after_cycle(coreware_t *core, ll_t *list_champ, int life)
+{
+    check_is_alive(core, list_champ);
+    if (check_is_dead(life, list_champ, core) != 0)
+        return 1;
+    for (int i = 0; i <= core->nb_champion; i++) {
+        set_champ_dead(list_champ, core, i);
+    }
+    return 0;
+}
+
+int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 {
     int life = 0;
     int delta = CYCLE_DELTA;
-    int cycle_to_die = core->nb_cyrcle_to_die;
+    int cycle_to_die = 5;
 
+    print_arena(arena);
     see_struct(list_champ);
-    set_champ_dead(list_champ, core, 1);
-    while (cycle_to_die >= 0 && check_is_dead(life, list_champ, core) == 0) {
+    scan_map(core, list_champ, arena);
+    while (cycle_to_die >= 0) {
         for (int cylce = 1; cylce < cycle_to_die; cylce++) {
+            instruction(core, list_champ, arena);
         }
-        check_is_alive(core, list_champ);
+        if (after_cycle(core, list_champ, life) == 1) {
+            break;
+        }
         cycle_to_die -= delta;
-    }
-    if (cycle_to_die < 0) {
-        if (check_is_dead(life, list_champ, core) == 0)
-            my_printf("No winner.\n");
     }
     return 0;
 }
