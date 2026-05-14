@@ -20,7 +20,8 @@ typedef struct champ {
     int size;
     int name_champ;
     int position;
-    int is_active;
+    int is_alive;
+    int coldown;
 } champ_t;
 
 typedef struct int_header {
@@ -57,9 +58,12 @@ uint8_t *create_arena(void);
 int write_in_arena(uint8_t *arena, int nb_champ, char **av);
 champ_t *init_champ(char **av, int *i);
 void check_pos(champ_t *tmp, int *i, char **av);
-int loop(coreware_t *core, ll_t *list_champ);
+int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena);
+void print_arena(uint8_t *arena);
 int set_champ_dead(ll_t *list_champ, coreware_t *core, int champ_target);
 void see_struct(ll_t *list_champ);
 int check_is_dead(int life, ll_t *list_champ, coreware_t *core);
+int instruction(coreware_t *core, ll_t *list_champ, uint8_t *arena);
+void scan_map(coreware_t *core, ll_t *list_champ, uint8_t *arena);
 
 #endif /* !ROBOTFACTORIE_H_ */
