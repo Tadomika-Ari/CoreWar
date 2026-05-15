@@ -38,13 +38,21 @@ int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena)
     int life = 0;
     int delta = CYCLE_DELTA;
     int cycle_to_die = core->nb_cyrcle_to_die;
+    int cycle = 0;
 
-    print_arena(arena);
-    see_struct(list_champ);
-    scan_map(core, list_champ, arena);
+    if (core->dump_cycle < 0) {
+        print_arena(arena);
+        see_struct(list_champ);
+        scan_map(core, list_champ, arena);
+    }
+    if (core->dump_cycle == 0)
+        return dump(0, arena, list_champ);
     while (cycle_to_die >= 0) {
         for (int cylce = 1; cylce < cycle_to_die; cylce++) {
             instruction(core, list_champ, arena);
+            cycle++;
+            if (core->dump_cycle >= 0 && cycle == core->dump_cycle)
+                return dump(cycle, arena, list_champ);
         }
         if (after_cycle(core, list_champ, life) == 1) {
             break;
