@@ -39,6 +39,11 @@ typedef struct coreware_s {
     int dump_cycle;
 } coreware_t;
 
+typedef struct {
+    int *count;
+    int *to_die;
+} cycles_t;
+
 typedef struct write {
     int fd;
     off_t file_size;
