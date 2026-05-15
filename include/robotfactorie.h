@@ -20,6 +20,9 @@ typedef struct champ {
     int size;
     int name_champ;
     int position;
+    int pc;
+    int carry;
+    int registers[REG_NUMBER];
     int is_alive;
     int coldown;
 } champ_t;
@@ -32,6 +35,7 @@ typedef struct int_header {
 typedef struct coreware_s {
     int nb_champion;
     int nb_cyrcle_to_die;
+    int dump_cycle;
 } coreware_t;
 
 typedef struct write {
@@ -50,6 +54,7 @@ typedef struct write {
 int help(void);
 char ***open_file(const char *namefile);
 header_t *get_header(char ***tab);
+int dump(int cycle, uint8_t *arena, ll_t *list_champ);
 
 
 int print_into(char ***tab, char **av, header_t *header);
