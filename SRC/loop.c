@@ -9,19 +9,8 @@
 
 int check_is_alive(coreware_t *core, ll_t *list_champ)
 {
-    champ_t *champ = NULL;
-
-    for (ll_t *tmp = list_champ; tmp; tmp = tmp->next) {
-        champ = tmp->data;
-        if (champ->is_alive == 1) {
-            my_printf("Champion %d(%s) is alive\n", champ->name_champ,
-                champ->file_champ);
-        }
-        if (champ->is_alive == 0) {
-            my_printf("Champion %d(%s) is dead\n", champ->name_champ,
-                champ->file_champ);
-        }
-    }
+    (void)core;
+    (void)list_champ;
     return 0;
 }
 
@@ -33,39 +22,83 @@ int after_cycle(coreware_t *core, ll_t *list_champ, int life)
     return 0;
 }
 
-static int run_cycle_phase(coreware_t *core, ll_t *list_champ,
-    uint8_t *arena, int *state)
+static int increment_cycles(ll_t *list_champ)
 {
-    for (int current = 1; current < state[0]; current++) {
+    ll_t *tmp;
+    champ_t *champ;
+
+    for (tmp = list_champ; tmp; tmp = tmp->next) {
+        champ = (champ_t *)tmp->data;
+        if (champ->is_alive == 1)
+            champ->cycles_without_live++;
+    }
+    return 0;
+}
+
+static int kill_inactive_champs(ll_t *list_champ, int cycle_to_die)
+{
+    ll_t *tmp;
+    champ_t *champ;
+
+    for (tmp = list_champ; tmp; tmp = tmp->next) {
+        champ = (champ_t *)tmp->data;
+        if (champ->cycles_without_live >= cycle_to_die)
+            champ->is_alive = 0;
+    }
+    return 0;
+}
+
+static int handle_cycles(coreware_t *core, ll_t *list_champ,
+    uint8_t *arena, cycles_t *cycles)
+{
+    int i;
+
+    i = 0;
+    while (i < *cycles->to_die) {
+        (*cycles->count)++;
+        increment_cycles(list_champ);
         instruction(core, list_champ, arena);
-        state[1] = state[1] + 1;
-        if (core->dump_cycle >= 0 && state[1] == core->dump_cycle) {
-            dump(state[1], arena, list_champ);
+        if (core->dump_cycle != -1 && *cycles->count == core->dump_cycle)
             return 1;
+        i++;
+    }
+    return 0;
+}
+
+static void setup_arena(coreware_t *core, ll_t *list_champ, uint8_t *arena)
+{
+    if (core->dump_cycle == -1)
+        print_arena(arena);
+    see_struct(list_champ);
+    scan_map(core, list_champ, arena);
+}
+
+static int run_main_loop(coreware_t *core, ll_t *list_champ,
+    uint8_t *arena, cycles_t *cycles)
+{
+    while (*cycles->to_die > 0) {
+        if (handle_cycles(core, list_champ, arena, cycles)) {
+            dump(*cycles->count, arena, list_champ);
+            return 0;
         }
+        kill_inactive_champs(list_champ, *cycles->to_die);
+        if (check_is_dead(0, list_champ, core) != 0)
+            break;
+        *cycles->to_die -= CYCLE_DELTA;
     }
     return 0;
 }
 
 int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 {
-    int life = 0;
-    int delta = CYCLE_DELTA;
-    int state[2] = {core->nb_cyrcle_to_die, 0};
+    cycles_t cycles;
+    int cycle_count;
+    int cycle_to_die;
 
-    if (core->dump_cycle < 0) {
-        print_arena(arena);
-        see_struct(list_champ);
-        scan_map(core, list_champ, arena);
-    }
-    if (core->dump_cycle == 0)
-        return dump(0, arena, list_champ);
-    while (state[0] >= 0) {
-        if (run_cycle_phase(core, list_champ, arena, state) == 1)
-            return 0;
-        if (after_cycle(core, list_champ, life) == 1)
-            break;
-        state[0] -= delta;
-    }
-    return 0;
+    cycle_count = 0;
+    cycle_to_die = core->nb_cyrcle_to_die;
+    cycles.count = &cycle_count;
+    cycles.to_die = &cycle_to_die;
+    setup_arena(core, list_champ, arena);
+    return run_main_loop(core, list_champ, arena, &cycles);
 }

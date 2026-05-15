@@ -13,7 +13,6 @@ int set_champ_dead(ll_t *list_champ, coreware_t *core, int champ_target)
     champ_t *champ = NULL;
 
     if (champ_target > core->nb_champion) {
-        my_printf("Dead not set\n");
         return 84;
     }
     for (int i = 0; i != champ_target; i++) {
