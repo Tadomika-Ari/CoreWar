@@ -25,6 +25,7 @@ typedef struct champ {
     int registers[REG_NUMBER];
     int is_alive;
     int coldown;
+    int cycles_without_live;
 } champ_t;
 
 typedef struct int_header {

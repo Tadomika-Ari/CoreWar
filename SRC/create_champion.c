@@ -15,6 +15,7 @@ void init_last(champ_t *tmp)
     tmp->carry = 0;
     tmp->is_alive = 1;
     tmp->coldown = 0;
+    tmp->cycles_without_live = 0;
 }
 
 static int is_champ_flag(char *arg)
