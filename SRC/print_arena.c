@@ -7,7 +7,19 @@
 
 #include "../include/robotfactorie.h"
 #include <ctype.h>
-#include <stdio.h>
+
+static void print_hex_padded(unsigned int value, int width)
+{
+    const char *digits = "0123456789abcdef";
+    char buffer[8];
+
+    for (int i = width - 1; i >= 0; i--) {
+        buffer[i] = digits[value % 16];
+        value /= 16;
+    }
+    for (int i = 0; i < width; i++)
+        my_putchar(buffer[i]);
+}
 
 void print_arena(uint8_t *arena)
 {
@@ -16,14 +28,17 @@ void print_arena(uint8_t *arena)
     if (arena == NULL)
         return;
     for (int off = 0; off < MEM_SIZE; off += 16) {
-        printf("%04x : ", (unsigned int)off);
-        for (int i = 0; i < 16 && off + i < MEM_SIZE; i++)
-            printf("%02x ", (unsigned int)arena[off + i]);
-        printf("| ");
+        print_hex_padded((unsigned int)off, 4);
+        my_printf(" : ");
+        for (int i = 0; i < 16 && off + i < MEM_SIZE; i++) {
+            print_hex_padded((unsigned int)arena[off + i], 2);
+            my_putchar(' ');
+        }
+        my_printf("| ");
         for (int i = 0; i < 16 && off + i < MEM_SIZE; i++) {
             c = arena[off + i];
-            printf("%c", isprint(c) ? c : '.');
+            my_putchar(isprint(c) ? c : '.');
         }
-        printf("\n");
+        my_putchar('\n');
     }
 }
