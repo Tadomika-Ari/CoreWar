@@ -55,7 +55,6 @@ champ_t *init_champ(char **av, int *i)
     if (tmp == NULL)
         return NULL;
     if (is_champ_flag(av[*i]) == 0) {
-        my_printf("No nb\n");
         free(tmp);
         return NULL;
     }
