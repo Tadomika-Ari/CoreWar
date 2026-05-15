@@ -60,13 +60,13 @@ int main(int ac, char **av)
     for (int i = 1; av[i] != NULL;) {
         tmp = init_champ(av, &i);
         if (tmp == NULL) {
-            return 84;
+            return my_puterror("error  init_champ\n", 84);
         }
         push_to_back(&list_champ, tmp);
         core->nb_champion++;
     }
     if (write_in_arena(arena, core->nb_champion, av) == 84)
-        return 84;
+        return my_puterror("error write in arena\n", 84);
     loop(core, list_champ, arena);
     return free_all(core, arena, list_champ);
 }
