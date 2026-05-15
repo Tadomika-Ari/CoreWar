@@ -36,6 +36,7 @@ int init_struct(coreware_t *core)
 {
     core->nb_champion = 0;
     core->nb_cyrcle_to_die = CYCLE_TO_DIE;
+    core->dump_cycle = -1;
     return 0;
 }
 
@@ -58,6 +59,13 @@ int main(int ac, char **av)
         return help();
     init_struct(core);
     for (int i = 1; av[i] != NULL;) {
+        if (my_strcmp(av[i], "-dump") == 0) {
+            if (av[i + 1] == NULL)
+                return my_puterror("error dump cycle missing\n", 84);
+            core->dump_cycle = my_getnbr(av[i + 1]);
+            i += 2;
+            continue;
+        }
         tmp = init_champ(av, &i);
         if (tmp == NULL) {
             return my_puterror("error  init_champ\n", 84);
