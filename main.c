@@ -73,8 +73,6 @@ void see_struct(ll_t *list_champ)
     while (list_champ != NULL) {
         next = list_champ->next;
         tmp = list_champ->data;
-        my_printf("NAME : %s\n", tmp->file_champ);
-        my_printf("ID : %d\n", tmp->name_champ);
         list_champ = next;
     }
 }
