@@ -73,6 +73,8 @@ int instruction(coreware_t *core, ll_t *list_champ, uint8_t *arena)
         opcode = arena[champ->pc % MEM_SIZE];
         if (is_valid_opcode(opcode)) {
             execute_instruction(champ, arena, opcode);
+            if (opcode == 1)
+                core->total_live++;
             step = calc_step(arena, champ->pc, opcode);
             champ->pc = (champ->pc + step) % MEM_SIZE;
         } else {

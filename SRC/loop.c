@@ -48,23 +48,6 @@ static int kill_inactive_champs(ll_t *list_champ, int cycle_to_die)
     return 0;
 }
 
-static int handle_cycles(coreware_t *core, ll_t *list_champ,
-    uint8_t *arena, cycles_t *cycles)
-{
-    int i;
-
-    i = 0;
-    while (i < *cycles->to_die) {
-        (*cycles->count)++;
-        increment_cycles(list_champ);
-        instruction(core, list_champ, arena);
-        if (core->dump_cycle != -1 && *cycles->count == core->dump_cycle)
-            return 1;
-        i++;
-    }
-    return 0;
-}
-
 static void setup_arena(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 {
     if (core->dump_cycle == -1)
@@ -76,16 +59,30 @@ static void setup_arena(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 static int run_main_loop(coreware_t *core, ll_t *list_champ,
     uint8_t *arena, cycles_t *cycles)
 {
+    int i = 0;
+
     while (*cycles->to_die > 0) {
-        if (handle_cycles(core, list_champ, arena, cycles)) {
-            dump(*cycles->count, arena, list_champ);
+        i = 0;
+        while (i < *cycles->to_die) {
+            (*cycles->count)++;
+            increment_cycles(list_champ);
+            instruction(core, list_champ, arena);
+            i++;
+        }
+        if (core->dump_cycle != -1 && *cycles->count >= core->dump_cycle) {
+            dump(core->dump_cycle, arena, list_champ);
             return 0;
         }
         kill_inactive_champs(list_champ, *cycles->to_die);
-        if (check_is_dead(0, list_champ, core) != 0)
-            break;
+        if (check_is_dead(0, list_champ, core) != 0) {
+            if (core->dump_cycle != -1 && *cycles->count < core->dump_cycle)
+                dump(*cycles->count, arena, list_champ);
+            return 0;
+        }
         *cycles->to_die -= CYCLE_DELTA;
     }
+    if (core->dump_cycle != -1 && *cycles->count < core->dump_cycle)
+        dump(*cycles->count, arena, list_champ);
     return 0;
 }
 

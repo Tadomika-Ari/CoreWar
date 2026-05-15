@@ -37,6 +37,8 @@ typedef struct coreware_s {
     int nb_champion;
     int nb_cyrcle_to_die;
     int dump_cycle;
+    int total_live;
+    int checks;
 } coreware_t;
 
 typedef struct {

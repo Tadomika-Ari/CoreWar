@@ -82,6 +82,8 @@ int init_struct(coreware_t *core)
     core->nb_champion = 0;
     core->nb_cyrcle_to_die = CYCLE_TO_DIE;
     core->dump_cycle = -1;
+    core->total_live = 0;
+    core->checks = 0;
     return 0;
 }
 
