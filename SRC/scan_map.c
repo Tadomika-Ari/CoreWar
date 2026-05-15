@@ -65,8 +65,6 @@ static int scan_one(uint8_t *arena, int pos, int *found)
 
     if (!is_valid_opcode(opcode))
         return 1;
-    my_printf("[SCAN] pos=%d opcode=%d instr=%s cycles=%d\n",
-        pos, opcode, op_tab[opcode].mnemonique, op_tab[opcode].nbr_cycles);
     (*found)++;
     return calc_step(arena, pos, opcode);
 }
@@ -78,7 +76,6 @@ void scan_map(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 
     if (arena == NULL)
         return;
-    my_printf("[SCAN] looking for instructions in arena\n");
     for (int i = 0; i < MEM_SIZE;) {
         step = scan_one(arena, i, &found);
         if (step <= 0)
@@ -86,7 +83,5 @@ void scan_map(coreware_t *core, ll_t *list_champ, uint8_t *arena)
         i += step;
         continue;
     }
-    if (found == 0)
-        my_printf("[SCAN] no opcode found\n");
     return;
 }
