@@ -7,21 +7,6 @@
 
 #include "../include/robotfactorie.h"
 
-int check_is_alive(coreware_t *core, ll_t *list_champ)
-{
-    (void)core;
-    (void)list_champ;
-    return 0;
-}
-
-int after_cycle(coreware_t *core, ll_t *list_champ, int life)
-{
-    check_is_alive(core, list_champ);
-    if (check_is_dead(life, list_champ, core) != 0)
-        return 1;
-    return 0;
-}
-
 static int increment_cycles(ll_t *list_champ)
 {
     ll_t *tmp;
@@ -56,33 +41,61 @@ static void setup_arena(coreware_t *core, ll_t *list_champ, uint8_t *arena)
     scan_map(core, list_champ, arena);
 }
 
-static int run_main_loop(coreware_t *core, ll_t *list_champ,
-    uint8_t *arena, cycles_t *cycles)
+static int run_cycle_to_die(ll_t *list_champ, uint8_t *arena,
+    coreware_t *core, int cycle_to_die)
 {
     int i = 0;
 
-    while (*cycles->to_die > 0) {
-        i = 0;
-        while (i < *cycles->to_die) {
-            (*cycles->count)++;
-            increment_cycles(list_champ);
-            instruction(core, list_champ, arena);
-            i++;
-        }
-        if (core->dump_cycle != -1 && *cycles->count >= core->dump_cycle) {
-            dump(core->dump_cycle, arena, list_champ);
-            return 0;
-        }
-        kill_inactive_champs(list_champ, *cycles->to_die);
-        if (check_is_dead(0, list_champ, core) != 0) {
-            if (core->dump_cycle != -1 && *cycles->count < core->dump_cycle)
-                dump(*cycles->count, arena, list_champ);
-            return 0;
-        }
-        *cycles->to_die -= CYCLE_DELTA;
+    while (i < cycle_to_die) {
+        increment_cycles(list_champ);
+        instruction(core, list_champ, arena);
+        i++;
     }
-    if (core->dump_cycle != -1 && *cycles->count < core->dump_cycle)
-        dump(*cycles->count, arena, list_champ);
+    return i;
+}
+
+static int dump_requested_cycle(coreware_t *core, int cycle_count,
+    uint8_t *arena, ll_t *list_champ)
+{
+    if (core->dump_cycle == -1 || cycle_count < core->dump_cycle)
+        return 0;
+    dump(core->dump_cycle, arena, list_champ);
+    return 1;
+}
+
+static int dump_last_cycle_if_needed(coreware_t *core, int cycle_count,
+    uint8_t *arena, ll_t *list_champ)
+{
+    if (core->dump_cycle == -1 || cycle_count >= core->dump_cycle)
+        return 0;
+    dump(cycle_count, arena, list_champ);
+    return 1;
+}
+
+static int finish_cycle_block(coreware_t *core, ll_t *list_champ,
+    uint8_t *arena, cycles_t *cycles)
+{
+    if (dump_requested_cycle(core, *cycles->count, arena, list_champ))
+        return 1;
+    kill_inactive_champs(list_champ, *cycles->to_die);
+    if (check_is_dead(0, list_champ, core) != 0) {
+        dump_last_cycle_if_needed(core, *cycles->count, arena, list_champ);
+        return 1;
+    }
+    *cycles->to_die -= CYCLE_DELTA;
+    return 0;
+}
+
+static int run_main_loop(coreware_t *core, ll_t *list_champ,
+    uint8_t *arena, cycles_t *cycles)
+{
+    while (*cycles->to_die > 0) {
+        *cycles->count += run_cycle_to_die(list_champ, arena,
+            core, *cycles->to_die);
+        if (finish_cycle_block(core, list_champ, arena, cycles))
+            return 0;
+    }
+    dump_last_cycle_if_needed(core, *cycles->count, arena, list_champ);
     return 0;
 }
 
