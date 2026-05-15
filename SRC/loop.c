@@ -33,12 +33,25 @@ int after_cycle(coreware_t *core, ll_t *list_champ, int life)
     return 0;
 }
 
+static int run_cycle_phase(coreware_t *core, ll_t *list_champ,
+    uint8_t *arena, int *state)
+{
+    for (int current = 1; current < state[0]; current++) {
+        instruction(core, list_champ, arena);
+        state[1] = state[1] + 1;
+        if (core->dump_cycle >= 0 && state[1] == core->dump_cycle) {
+            dump(state[1], arena, list_champ);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 {
     int life = 0;
     int delta = CYCLE_DELTA;
-    int cycle_to_die = core->nb_cyrcle_to_die;
-    int cycle = 0;
+    int state[2] = {core->nb_cyrcle_to_die, 0};
 
     if (core->dump_cycle < 0) {
         print_arena(arena);
@@ -47,17 +60,12 @@ int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena)
     }
     if (core->dump_cycle == 0)
         return dump(0, arena, list_champ);
-    while (cycle_to_die >= 0) {
-        for (int cylce = 1; cylce < cycle_to_die; cylce++) {
-            instruction(core, list_champ, arena);
-            cycle++;
-            if (core->dump_cycle >= 0 && cycle == core->dump_cycle)
-                return dump(cycle, arena, list_champ);
-        }
-        if (after_cycle(core, list_champ, life) == 1) {
+    while (state[0] >= 0) {
+        if (run_cycle_phase(core, list_champ, arena, state) == 1)
+            return 0;
+        if (after_cycle(core, list_champ, life) == 1)
             break;
-        }
-        cycle_to_die -= delta;
+        state[0] -= delta;
     }
     return 0;
 }
