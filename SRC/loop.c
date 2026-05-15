@@ -30,9 +30,6 @@ int after_cycle(coreware_t *core, ll_t *list_champ, int life)
     check_is_alive(core, list_champ);
     if (check_is_dead(life, list_champ, core) != 0)
         return 1;
-    for (int i = 0; i <= core->nb_champion; i++) {
-        set_champ_dead(list_champ, core, i);
-    }
     return 0;
 }
 
@@ -40,7 +37,7 @@ int loop(coreware_t *core, ll_t *list_champ, uint8_t *arena)
 {
     int life = 0;
     int delta = CYCLE_DELTA;
-    int cycle_to_die = 5;
+    int cycle_to_die = core->nb_cyrcle_to_die;
 
     print_arena(arena);
     see_struct(list_champ);
