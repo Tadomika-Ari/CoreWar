@@ -17,6 +17,7 @@ MAINTEST        = 	main.c \
 				SRC/flag_help.c\
 				SRC/create_champion.c\
 				SRC/write_in_arena.c\
+				SRC/dump.c\
 				SRC/print_arena.c\
 				SRC/loop.c\
 				SRC/set_champ_dead.c\
